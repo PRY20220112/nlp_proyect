@@ -1,0 +1,15 @@
+Api python spacy
+
+	Creado endpoint /spacy/
+		recibe un json 
+		{
+			"texto": ""
+		}
+		retorna el analisis en un objeto json
+
+Pendiente el generar script para insertar el resultado
+en un documento wordy tranformarlo a pdf
+
+Conectar con la aplicacion de react native
+
+
