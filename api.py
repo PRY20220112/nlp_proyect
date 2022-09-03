@@ -4,6 +4,11 @@ import servicioNlp
 app = Flask(__name__)
 
 
+@app.route('/test/', methods=['GET'])
+def test_deploy():
+    return 'Hello World'
+
+
 @app.route('/spacy/', methods=['GET'])
 def request_file():
     try:
