@@ -1,3 +1,5 @@
+# Pasos para ejecutar el proyecto
+
 ### Crear un entorno virtual
 
 	python -m venv .env
@@ -12,8 +14,9 @@ Comando Windows
 
 	.env/Scripts/active
 
-- Para detener el entorno virual ejecutar en la linea de comandos
-		deactivate
+**Para detener el entorno virual ejecutar en la linea de comandos**
+
+	deactivate
 
 ## Ejecutar 
 
@@ -27,9 +30,20 @@ Comando Windows
 
 ## Para usar el servicio ejecutar
 
-	python servicioNlp.py
+	python api.py 
 
-*Por defecto utiliza el archivo datos6.txt de la carpeta textos*
+### Rutas del api
+
+	- GET http://localhost:4000/spacy/
+
+Enviar una peticion http GET enviando en el body un objeto Json
+``` json
+{
+  "texto" : "Transcripcion de la historia clinica"
+}
+``` 
+El api retornara un objeto json con los datos del paciente extraidos
+
 ----------------
 Esta version fue echa en python 3.10.5
 La version del modulo spacy utilizada es la 3.4.1
