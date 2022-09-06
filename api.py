@@ -9,7 +9,7 @@ def test_deploy():
     return 'Hello World'
 
 
-@app.route('/spacy/', methods=['GET'])
+@app.route('/spacy/', methods=['POST'])
 def request_file():
     try:
         texto = request.json['texto']
