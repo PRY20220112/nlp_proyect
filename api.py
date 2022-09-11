@@ -23,7 +23,7 @@ def request_file():
         respuesta = servicioNlp.procesar_texto(texto)
     except Exception as e:
         print(e)
-        return '{"response": "Server Error"}', 500
+        return '{"response": "Internal Server Error"}', 500
     json = respuesta.json
     return json, 200
 
