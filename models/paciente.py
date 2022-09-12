@@ -8,6 +8,7 @@ class Paciente():
     nombre = ""
     sexo = ""
     presion_arterial = ""
+    grupo_sanguineo = ""
     procedencia = ""
     estadoCivil = ""
     edad = ""
