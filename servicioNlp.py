@@ -9,20 +9,36 @@ matcher = Matcher(nlp.vocab)
 
 def patrones():
 
+    pattern = [
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "b"},{"TEXT": "negativo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "b"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "o"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "o"},{"TEXT": "negativo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "a"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "a"},{"TEXT": "negativo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "rh"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "rh"},{"TEXT": "negativo"}]
+              ]
+    matcher.add("GSANGUINEO", pattern)
+
     pattern = [{"TEXT": "presion"}, {"TEXT": "arterial"}, {"TEXT": "de"}, {"IS_DIGIT": True}]
     matcher.add("PRESION", [pattern])
 
     pattern = [
                 [{"TEXT": {"REGEX": "[0-9]+[,.]?[0-9]+"}}, {"TEXT": "centimetros"}],
-                [{"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "centimetros"}]
+                [{"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "centimetros"}],
+                [{"TEXT": "mide"}, {"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "centimetros", "OP": "?"}]
              ]
     matcher.add("ALTURA", pattern)
 
     pattern = [{"TEXT": "temperatura"}, {"TEXT": "de"}, {"IS_DIGIT": True}, {"TEXT": "grados"}]
     matcher.add("TEMPERATURA", [pattern])
 
-    pattern = [{"IS_DIGIT": True}, {"TEXT": "kilogramos"}]
-    matcher.add("PESO", [pattern])
+    pattern = [
+            [{"IS_DIGIT": True}, {"TEXT": "kilogramos"}],
+            [{"TEXT": "peso"},{"TEXT": "de"}, {"IS_DIGIT": True}, {"TEXT": "kilogramos", "OP": "?"}]
+            ]
+    matcher.add("PESO", pattern)
 
     pattern = [{"IS_DIGIT": True}, {"TEXT": "años"}]
     matcher.add("EDAD", [pattern])
@@ -90,6 +106,9 @@ def procesar_texto(texto):
         elif string_id == "PRESION":
             matched_span = doc[end - 1: end]
             paciente.presion_arterial = matched_span.text
+        elif string_id == "GSANGUINEO":
+            matched_span = doc[end - 2: end]
+            paciente.grupo_sanguineo = matched_span.text
         else:
             matched_span = doc[start:end]
             paciente.datos_adicionales += matched_span.text
@@ -102,6 +121,5 @@ def procesar_texto(texto):
             # print("Estadistico", "Nombre: ", ent.text)
         if ent.label_ == "LOC":
             paciente.procedencia = ent.text
-            pass
             # print("Estadistico", "Procedencia: ", ent.text)
     return jsonify(paciente.__dict__)
