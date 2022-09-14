@@ -123,7 +123,7 @@ def procesar_texto(texto):
     resolve_matches(matches, paciente, doc)
     for ent in doc.ents:
         if ent.label_ == "PER":
-            if len(ent.text) > 6:
+            if ent.text.find(" ") > -1:
                 paciente.nombre = ent.text
             # print("Estadistico", "Nombre: ", ent.text)
         elif ent.label_ == "LOC":
@@ -131,6 +131,9 @@ def procesar_texto(texto):
             # print("Estadistico", "Procedencia: ", ent.text)
         elif ent.label_ == "DIAG":
             paciente.diagnostico.append(ent.text)
+            print(ent.text)
+
     paciente_dic = paciente.__dict__
     paciente_dic["diagnosticos"] = paciente.diagnostico
-    return jsonify(paciente.__dict__)
+
+    return jsonify(paciente_dic)

@@ -16,4 +16,5 @@ class Paciente():
     diagnostico = list()
 
     def __init__(self):
+        self.diagnostico.clear()
         pass
