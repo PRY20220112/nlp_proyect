@@ -3,7 +3,6 @@ from spacy.matcher import Matcher
 from models.paciente import Paciente
 from flask import jsonify
 from models.ruler import patrones_ruler
-import json
 
 nlp = spacy.load("es_core_news_md")
 matcher = Matcher(nlp.vocab)
@@ -125,15 +124,21 @@ def procesar_texto(texto):
         if ent.label_ == "PER":
             if ent.text.find(" ") > -1:
                 paciente.nombre = ent.text
-            # print("Estadistico", "Nombre: ", ent.text)
         elif ent.label_ == "LOC":
             paciente.procedencia = ent.text
-            # print("Estadistico", "Procedencia: ", ent.text)
         elif ent.label_ == "DIAG":
             paciente.diagnostico.append(ent.text)
-            print(ent.text)
+        elif ent.label_ == "ANTP":
+            paciente.antedecentes_personales.append(ent.text)
+        elif ent.label_ == "ANTF":
+            paciente.antedecentes_familiares.append(ent.text)
+        elif ent.label_ == "OBSR":
+            paciente.observaciones.append(ent.text)
 
     paciente_dic = paciente.__dict__
     paciente_dic["diagnosticos"] = paciente.diagnostico
+    paciente_dic["antecedentes_personales"] = paciente.antedecentes_personales
+    paciente_dic["antecedentes_familiares"] = paciente.antedecentes_familiares
+    paciente_dic["observaciones"] = paciente.observaciones
 
     return jsonify(paciente_dic)
