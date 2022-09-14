@@ -2,9 +2,14 @@ import spacy
 from spacy.matcher import Matcher
 from models.paciente import Paciente
 from flask import jsonify
+from models.ruler import patrones_ruler
+import json
 
 nlp = spacy.load("es_core_news_md")
 matcher = Matcher(nlp.vocab)
+ruler = nlp.add_pipe("entity_ruler", before="ner")
+patterns = patrones_ruler()
+ruler.add_patterns(patterns)
 
 
 def patrones():
@@ -21,7 +26,7 @@ def patrones():
               ]
     matcher.add("GSANGUINEO", pattern)
 
-    pattern = [{"TEXT": "presion"}, {"TEXT": "arterial"}, {"TEXT": "de"}, {"IS_DIGIT": True}]
+    pattern = [{"TEXT": "presion"}, {"TEXT": "arterial"}, {"TEXT": "de"}, {"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}]
     matcher.add("PRESION", [pattern])
 
     pattern = [
@@ -31,19 +36,19 @@ def patrones():
              ]
     matcher.add("ALTURA", pattern)
 
-    pattern = [{"TEXT": "temperatura"}, {"TEXT": "de"}, {"IS_DIGIT": True}, {"TEXT": "grados"}]
+    pattern = [{"TEXT": "temperatura"}, {"TEXT": "de"},{"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}, {"TEXT": "grados"}]
     matcher.add("TEMPERATURA", [pattern])
 
     pattern = [
             [{"IS_DIGIT": True}, {"TEXT": "kilogramos"}],
-            [{"TEXT": "peso"},{"TEXT": "de"}, {"IS_DIGIT": True}, {"TEXT": "kilogramos", "OP": "?"}]
+            [{"TEXT": "peso"}, {"TEXT": "de"}, {"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}, {"TEXT": "kilogramos", "OP": "?"}]
             ]
     matcher.add("PESO", pattern)
 
     pattern = [{"IS_DIGIT": True}, {"TEXT": "años"}]
     matcher.add("EDAD", [pattern])
 
-    pattern = [{"TEXT": "DNI"}, {"IS_DIGIT": True}]
+    pattern = [{"TEXT": "DNI"}, {"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}]
     matcher.add("DNI", [pattern])
 
     pattern = [
@@ -68,15 +73,8 @@ def patrones():
 #     text = f.read()
 
 
-def procesar_texto(texto):
-    patrones()
-    text = texto
-    doc = nlp(text)
-    matches = matcher(doc)
-    paciente = Paciente()
-    # Matches
+def resolve_matches(matches, paciente, doc):
     for match_id, start, end in matches:
-
         string_id = nlp.vocab.strings[match_id]
         if string_id == "SEXO":
             matched_span = doc[end - 1:end]
@@ -114,12 +112,25 @@ def procesar_texto(texto):
             paciente.datos_adicionales += matched_span.text
             # print("Matcher:", string_id, ":", matched_span.text)
 
+
+def procesar_texto(texto):
+    patrones()
+    text = texto
+    doc = nlp(text)
+    matches = matcher(doc)
+    paciente = Paciente()
+    # Matches
+    resolve_matches(matches, paciente, doc)
     for ent in doc.ents:
         if ent.label_ == "PER":
             if len(ent.text) > 6:
                 paciente.nombre = ent.text
             # print("Estadistico", "Nombre: ", ent.text)
-        if ent.label_ == "LOC":
+        elif ent.label_ == "LOC":
             paciente.procedencia = ent.text
             # print("Estadistico", "Procedencia: ", ent.text)
+        elif ent.label_ == "DIAG":
+            paciente.diagnostico.append(ent.text)
+    paciente_dic = paciente.__dict__
+    paciente_dic["diagnosticos"] = paciente.diagnostico
     return jsonify(paciente.__dict__)

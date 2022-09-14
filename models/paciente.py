@@ -13,6 +13,7 @@ class Paciente():
     estadoCivil = ""
     edad = ""
     datos_adicionales = ""
+    diagnostico = list()
 
     def __init__(self):
         pass
