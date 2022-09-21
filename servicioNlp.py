@@ -89,7 +89,7 @@ def resolve_matches(matches, paciente, doc):
             # print("Matcher:", string_id, ":", matched_span.text)
         elif string_id == "CIVIL":
             matched_span = doc[end - 1:end]
-            paciente.estadoCivil = matched_span.text
+            paciente.estado_civil = matched_span.text
             # print("Matcher:", string_id, ":", matched_span.text)
         elif string_id == "EDAD":
             matched_span = doc[start:end - 1]
