@@ -14,14 +14,14 @@ ruler.add_patterns(patterns)
 def patrones():
 
     pattern = [
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "b"},{"TEXT": "negativo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "b"},{"TEXT": "positivo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "o"},{"TEXT": "positivo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "o"},{"TEXT": "negativo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "a"},{"TEXT": "positivo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "a"},{"TEXT": "negativo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "rh"},{"TEXT": "positivo"}],
-                [{"TEXT": "grupo"}, {"TEXT": "sanguineo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "rh"},{"TEXT": "negativo"}]
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "b"},{"TEXT": "negativo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "b"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "o"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "o"},{"TEXT": "negativo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "a"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "a"},{"TEXT": "negativo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "rh"},{"TEXT": "positivo"}],
+                [{"TEXT": "grupo"}, {"TEXT": "sanguíneo"}, {"TEXT": "de", "OP": "?"}, {"TEXT": "rh"},{"TEXT": "negativo"}]
               ]
     matcher.add("GSANGUINEO", pattern)
 
@@ -30,8 +30,11 @@ def patrones():
 
     pattern = [
                 [{"TEXT": {"REGEX": "[0-9]+[,.]?[0-9]+"}}, {"TEXT": "centimetros"}],
+                [{"TEXT": {"REGEX": "[0-9]+[,.]?[0-9]+"}}, {"TEXT": "cm"}],
                 [{"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "centimetros"}],
-                [{"TEXT": "mide"}, {"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "centimetros", "OP": "?"}]
+                [{"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "cm"}],
+                [{"TEXT": "mide"}, {"TEXT": {"REGEX": "[0-9]+"}}, {"TEXT": "centimetros", "OP": "?"}],
+                [{"TEXT": "altura"}, {"TEXT": "de", "OP": "?"}, {"TEXT": {"REGEX": "[0-9]+"}}]
              ]
     matcher.add("ALTURA", pattern)
 
@@ -47,12 +50,17 @@ def patrones():
     pattern = [{"IS_DIGIT": True}, {"TEXT": "años"}]
     matcher.add("EDAD", [pattern])
 
-    pattern = [{"TEXT": "DNI"}, {"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}]
-    matcher.add("DNI", [pattern])
+    pattern =[
+                [{"TEXT": "DNI"}, {"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}],
+                [{"TEXT": "dni"}, {"IS_SPACE": True, "OP":"?"}, {"IS_DIGIT": True}]
+            ]
+    matcher.add("DNI", pattern)
 
     pattern = [
             [{"TEXT": "de"}, {"TEXT": "genero"}, {"TEXT": "femenino"}],
-            [{"TEXT": "de"}, {"TEXT": "genero"}, {"TEXT": "masculino"}]
+            [{"TEXT": "de"}, {"TEXT": "genero"}, {"TEXT": "masculino"}],
+            [{"TEXT": "sexo"}, {"TEXT": "masculino"}],
+            [{"TEXT": "sexo"}, {"TEXT": "femenino"}]
             ]
     matcher.add("SEXO", pattern)
 
